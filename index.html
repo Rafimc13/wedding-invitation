@@ -20,7 +20,6 @@
       position: relative;
       width: 400px;
       height: 520px;
-      cursor: pointer;
       perspective: 1000px;
       margin-bottom: 20px;
     }
@@ -33,21 +32,30 @@
       transform-origin: bottom;
       transition: transform 1.5s ease;
       z-index: 2;
+      cursor: pointer;
     }
 
     .invitation {
       position: absolute;
       width: 100%;
       height: 100%;
-      background: url('invitation.jpeg') no-repeat center/contain;
       opacity: 0;
-      transition: opacity 1.5s ease, transform 1.5s ease;
       transform: translateY(20px);
+      transition: opacity 1.5s ease, transform 1.5s ease;
       z-index: 1;
+    }
+
+    .invitation img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
     .open .envelope {
       transform: rotateX(-120deg);
+      pointer-events: none; /* disable clicking on envelope when open */
     }
 
     .open .invitation {
@@ -59,27 +67,33 @@
       background-color: #8b5e3c;
       color: #fff;
       border: none;
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 1.1em;
-      border-radius: 5px;
+      padding: 1px 25px;
+      margin: 8px 0;
+      font-size: 1.2em;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     .button:hover {
       background-color: #a86d4b;
+      transform: scale(1.05);
     }
 
     #downloadButton {
-      display: none; /* Hide the download button initially */
+      display: none; /* Hidden by default */
+      position: relative;
+      z-index: 3; /* Make sure it’s above envelope and invitation */
     }
   </style>
 </head>
 <body>
-  <div class="container" id="envelopeContainer" onclick="toggleEnvelope()">
-    <div class="envelope"></div>
-    <div class="invitation"></div>
+  <div class="container" id="envelopeContainer">
+    <div class="envelope" onclick="openEnvelope()"></div>
+    <div class="invitation">
+      <img id="invitationImage" src="invitation.jpeg" alt="Wedding Invitation">
+    </div>
   </div>
 
   <button class="button" id="toggleButton" onclick="toggleEnvelope()">Click to open</button>
@@ -89,21 +103,31 @@
     const container = document.getElementById('envelopeContainer');
     const toggleButton = document.getElementById('toggleButton');
     const downloadButton = document.getElementById('downloadButton');
+    const invitationImage = document.getElementById('invitationImage');
 
-    function toggleEnvelope() {
-      container.classList.toggle('open');
-      if (container.classList.contains('open')) {
+    function openEnvelope() {
+      if (!container.classList.contains('open')) {
+        container.classList.add('open');
         toggleButton.textContent = "Click to close";
         downloadButton.style.display = "inline-block"; // Show download button
-      } else {
+      }
+    }
+
+    function toggleEnvelope() {
+      if (container.classList.contains('open')) {
+        // Close only if already open
+        container.classList.remove('open');
         toggleButton.textContent = "Click to open";
         downloadButton.style.display = "none"; // Hide download button
+      } else {
+        // Open if closed
+        openEnvelope();
       }
     }
 
     function downloadInvitation() {
       const link = document.createElement('a');
-      link.href = 'invitation.jpeg'; // Path to your invitation image
+      link.href = invitationImage.src; // Use the actual image source
       link.download = 'Rafail-Katerina-Invitation.jpeg';
       link.click();
     }
