@@ -21,7 +21,7 @@
       width: 400px;
       height: 520px;
       perspective: 1000px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .envelope {
@@ -67,7 +67,7 @@
       background-color: #8b5e3c;
       color: #fff;
       border: none;
-      padding: 1px 25px;
+      padding: 4px 25px;
       margin: 8px 0;
       font-size: 1.2em;
       border-radius: 8px;
@@ -125,12 +125,26 @@
       }
     }
 
-    function downloadInvitation() {
-      const link = document.createElement('a');
-      link.href = invitationImage.src; // Use the actual image source
-      link.download = 'Rafail-Katerina-Invitation.jpeg';
-      link.click();
-    }
+function downloadInvitation() {
+  const imageUrl = invitationImage.src;
+
+  // Detect if it's a mobile device
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // On mobile: open in new tab so user can long-press and save
+    window.open(imageUrl, '_blank');
+    alert("The invitation has opened in a new tab. Long press the image to save it.");
+  } else {
+    // On desktop: trigger download
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'Rafail-Katerina-Invitation.jpeg';
+    document.body.appendChild(link); // Firefox fix
+    link.click();
+    document.body.removeChild(link);
+  }
+}
   </script>
 </body>
 </html>
