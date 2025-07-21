@@ -29,10 +29,11 @@
       width: 100%;
       height: 100%;
       background: url('folder-closed-logo.png') no-repeat center/contain;
-      transform-origin: bottom;
+      transform-origin: top center; /* Make it flap upwards */
       transition: transform 1.5s ease;
       z-index: 2;
       cursor: pointer;
+      backface-visibility: hidden; /* Hide the back face */
     }
 
     .invitation {
@@ -54,7 +55,7 @@
     }
 
     .open .envelope {
-      transform: rotateX(-120deg);
+      transform: rotateX(90deg); /* Flap upwards */
       pointer-events: none; /* disable clicking on envelope when open */
     }
 
@@ -125,26 +126,26 @@
       }
     }
 
-function downloadInvitation() {
-  const imageUrl = invitationImage.src;
+    function downloadInvitation() {
+      const imageUrl = invitationImage.src;
 
-  // Detect if it's a mobile device
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      // Detect if it's a mobile device
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  if (isMobile) {
-    // On mobile: open in new tab so user can long-press and save
-    window.open(imageUrl, '_blank');
-    alert("The invitation has opened in a new tab. Long press the image to save it.");
-  } else {
-    // On desktop: trigger download
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = 'Rafail-Katerina-Invitation.jpeg';
-    document.body.appendChild(link); // Firefox fix
-    link.click();
-    document.body.removeChild(link);
-  }
-}
+      if (isMobile) {
+        // On mobile: open in new tab so user can long-press and save
+        window.open(imageUrl, '_blank');
+        alert("The invitation has opened in a new tab. Long press the image to save it.");
+      } else {
+        // On desktop: trigger download
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = 'Rafail-Katerina-Invitation.jpeg';
+        document.body.appendChild(link); // Firefox fix
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
   </script>
 </body>
 </html>
