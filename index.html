@@ -185,14 +185,22 @@
     const toggleButton = document.getElementById('toggleButton');
     const invitationImage = document.getElementById('invitationImage');
 
-    function openEnvelope() {
-      if (!container.classList.contains('open')) {
-        container.classList.add('open');
-        toggleButton.style.display = "none";  // Hide the button after opening
-        document.getElementById("mapButtons").classList.add("visible");
-        document.getElementById("rsvpContainer").classList.add("visible");
-      }
-    }
+function openEnvelope() {
+  if (!container.classList.contains('open')) {
+    container.classList.add('open');
+    toggleButton.style.display = "none";
+    document.getElementById("mapButtons").classList.add("visible");
+    document.getElementById("rsvpContainer").classList.add("visible");
+
+    // ✅ Scroll RSVP into view after 100ms (allows layout to update)
+    setTimeout(() => {
+      document.getElementById("rsvpContainer").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 100);
+  }
+}
 
     function downloadInvitation() {
       const imageUrl = invitationImage.src;
