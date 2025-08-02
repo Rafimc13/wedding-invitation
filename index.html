@@ -15,6 +15,23 @@
       height: 100vh;
       font-family: 'Georgia', serif;
     }
+    .map-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    }
+    #mapButtons {
+    display: none;
+    margin-top: 10px;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    }
+    #mapButtons.visible {
+    display: flex;
+    }
 
     .container {
       position: relative;
@@ -99,6 +116,14 @@
 
   <button class="button" id="toggleButton" onclick="toggleEnvelope()">Click to open</button>
   <button class="button" id="downloadButton" onclick="downloadInvitation()">Download Invitation</button>
+  <div class="map-buttons" id="mapButtons">
+    <a href="https://maps.app.goo.gl/1wUK4TtvxRL28XBe8" target="_blank">
+      <button class="button">📍 Εκκλησία</button>
+    </a>
+    <a href="https://maps.app.goo.gl/saRWr7VBe3gGs4317" target="_blank">
+      <button class="button">📍 Κτήμα</button>
+    </a>
+  </div>
 
   <script>
     const container = document.getElementById('envelopeContainer');
@@ -111,6 +136,7 @@
         container.classList.add('open');
         toggleButton.textContent = "Click to close";
         downloadButton.style.display = "inline-block"; // Show download button
+        document.getElementById("mapButtons").classList.add("visible");
       }
     }
 
@@ -120,6 +146,7 @@
         container.classList.remove('open');
         toggleButton.textContent = "Click to open";
         downloadButton.style.display = "none"; // Hide download button
+        document.getElementById("mapButtons").classList.remove("visible");
       } else {
         // Open if closed
         openEnvelope();
