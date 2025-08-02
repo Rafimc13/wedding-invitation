@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+    apiKey: "AIzaSyD-rsYGh1BsZ-XcJT92CJcxE12Q9n-wNL0",
+    authDomain: "wedding-rafkata.firebaseapp.com",
+    projectId: "wedding-rafkata",
+    storageBucket: "wedding-rafkata.firebasestorage.app",
+    messagingSenderId: "404080911551",
+    appId: "1:404080911551:web:ec21538bfd0fc090ad920a",
+    measurementId: "G-35CKFVW71P"
+    };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ραφαήλ & Κατερίνα</title>
@@ -15,24 +31,50 @@
       height: 100vh;
       font-family: 'Georgia', serif;
     }
+  .map-button {
+    background-color: #8b5e3c;
+    color: #fff;
+    border: none;
+    padding: 2px 10px;
+    margin: 2px 4px;
+    font-size: 1.0em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);  /* softer shadow */
+  }
     .map-buttons {
     display: flex;
-    gap: 12px;
+    gap: 6px;
     margin-top: 10px;
     flex-wrap: wrap;
     justify-content: center;
     }
     #mapButtons {
     display: none;
-    margin-top: 10px;
-    gap: 12px;
+    margin-top: 5px;
+    gap: 3px;
     flex-wrap: wrap;
     justify-content: center;
     }
     #mapButtons.visible {
     display: flex;
     }
-
+    #rsvpContainer {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    text-align: center;
+    }
+    #rsvpContainer.visible {
+    display: flex;
+    }
+    #rsvp h3 {
+    margin: 8px 0 5px 0;
+    padding: 0;
+    font-size: 1.0em; /* Optional: smaller text */
+    }
     .container {
       position: relative;
       width: 400px;
@@ -85,8 +127,8 @@
       background-color: #8b5e3c;
       color: #fff;
       border: none;
-      padding: 4px 25px;
-      margin: 8px 0;
+      padding: 4px 20px;
+      margin: 1px 0;
       font-size: 1.2em;
       border-radius: 8px;
       cursor: pointer;
@@ -98,12 +140,6 @@
       background-color: #a86d4b;
       transform: scale(1.05);
     }
-
-    #downloadButton {
-      display: none; /* Hidden by default */
-      position: relative;
-      z-index: 3; /* Make sure it’s above envelope and invitation */
-    }
   </style>
 </head>
 <body>
@@ -113,30 +149,48 @@
       <img id="invitationImage" src="invitation.jpeg" alt="Wedding Invitation">
     </div>
   </div>
-
-  <button class="button" id="toggleButton" onclick="toggleEnvelope()">Click to open</button>
-  <button class="button" id="downloadButton" onclick="downloadInvitation()">Download Invitation</button>
+  <button class="button" id="toggleButton" onclick="toggleEnvelope()">Άνοιγμα</button>
+  <div id="rsvpContainer">
+    <div id="rsvp">
+      <h3 style="font-family: 'Georgia', serif;">Θα παραβρεθείτε στην εκδήλωση;</h3>
+      <form id="rsvpForm">
+        <label>
+          <input type="radio" name="attendance" value="Yes" required> Ναι
+        </label>
+        <label style="margin-left: 10px;">
+          <input type="radio" name="attendance" value="No" required> Όχι
+        </label>
+        <br><br>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <input type="text" id="guestName" placeholder="Όνομα Οικογένειας" style="padding: 4px; border-radius: 6px;" />
+          <input type="number" id="guestCount" placeholder="Αρ. Ατόμων" min="1" max="10" style="padding: 4px; border-radius: 6px; width: 100px;" />
+        </div>
+        <br>
+        <button class="button" type="submit">Υποβολή</button>
+      </form>
+      <p id="confirmationMessage" style="color: green; margin-top: 10px;"></p>
+    </div>
+  </div>
   <div class="map-buttons" id="mapButtons">
     <a href="https://maps.app.goo.gl/1wUK4TtvxRL28XBe8" target="_blank">
-      <button class="button">📍 Εκκλησία</button>
+      <button class="map-button">📍 Εκκλησία</button>
     </a>
     <a href="https://maps.app.goo.gl/saRWr7VBe3gGs4317" target="_blank">
-      <button class="button">📍 Κτήμα</button>
+      <button class="map-button">📍 Κτήμα</button>
     </a>
   </div>
 
   <script>
     const container = document.getElementById('envelopeContainer');
     const toggleButton = document.getElementById('toggleButton');
-    const downloadButton = document.getElementById('downloadButton');
     const invitationImage = document.getElementById('invitationImage');
 
     function openEnvelope() {
       if (!container.classList.contains('open')) {
         container.classList.add('open');
-        toggleButton.textContent = "Click to close";
-        downloadButton.style.display = "inline-block"; // Show download button
+        toggleButton.textContent = "Κλείσιμο";
         document.getElementById("mapButtons").classList.add("visible");
+        document.getElementById("rsvpContainer").classList.add("visible");
       }
     }
 
@@ -144,9 +198,9 @@
       if (container.classList.contains('open')) {
         // Close only if already open
         container.classList.remove('open');
-        toggleButton.textContent = "Click to open";
-        downloadButton.style.display = "none"; // Hide download button
+        toggleButton.textContent = "Άνοιγμα";
         document.getElementById("mapButtons").classList.remove("visible");
+        document.getElementById("rsvpContainer").classList.remove("visible");
       } else {
         // Open if closed
         openEnvelope();
@@ -174,5 +228,67 @@
       }
     }
   </script>
+  <script>
+const rsvpForm = document.getElementById('rsvpForm');
+const confirmationMessage = document.getElementById('confirmationMessage');
+
+rsvpForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const rawName = document.getElementById('guestName').value.trim() || "Anonymous";
+  const name = rawName.toLowerCase();
+  const guestCountValue = document.getElementById('guestCount').value.trim();
+  const answer = rsvpForm.attendance.value;
+
+  // Validation: name must not contain digits, guest count must be integer > 0
+  const nameContainsDigits = /\d/.test(name);
+  const guestCount = parseInt(guestCountValue, 10);
+  const guestCountInvalid = isNaN(guestCount) || guestCount <= 0;
+
+  if (nameContainsDigits || guestCountInvalid) {
+    confirmationMessage.textContent = "❌ Λάθος καταχώρηση.";
+    confirmationMessage.style.color = "red";
+    return;
+  }
+
+try {
+    const querySnapshot = await db.collection("rsvp")
+    .where("name", "==", name)
+    .where("attending", "==", answer)
+    .get();
+
+    let alreadySubmittedSame = false;
+
+    querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    if (data.guestCount === guestCount) {
+    alreadySubmittedSame = true;
+    }
+    });
+
+  if (alreadySubmittedSame) {
+    confirmationMessage.textContent = "⚠️ Έχετε ήδη καταχωρίσει αυτή την απάντηση.";
+    confirmationMessage.style.color = "orange";
+    return;
+  }
+
+    // Save response
+    await db.collection("rsvp").add({
+      name: name,
+      attending: answer,
+      guestCount: guestCount,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    confirmationMessage.textContent = "✅ Ευχαριστούμε πολύ!";
+    confirmationMessage.style.color = "green";
+    rsvpForm.reset();
+  } catch (error) {
+    confirmationMessage.textContent = "❌ Λάθος καταχώρηση.";
+    confirmationMessage.style.color = "red";
+    console.error("RSVP Error:", error);
+  }
+});
+</script>
 </body>
 </html>
