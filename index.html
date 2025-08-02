@@ -28,7 +28,8 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      overflow-y: auto;
       font-family: 'Georgia', serif;
     }
   .map-button {
@@ -192,12 +193,16 @@ function openEnvelope() {
     document.getElementById("mapButtons").classList.add("visible");
     document.getElementById("rsvpContainer").classList.add("visible");
 
-    // ✅ Scroll RSVP into view after 100ms (allows layout to update)
     setTimeout(() => {
-      document.getElementById("rsvpContainer").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+      const rsvp = document.getElementById("rsvpContainer");
+      if (rsvp && typeof rsvp.scrollIntoView === 'function') {
+        rsvp.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        // Fallback scroll in case scrollIntoView fails on some mobiles
+        setTimeout(() => {
+          window.scrollTo({ top: rsvp.offsetTop - 20, behavior: "smooth" });
+        }, 300);
+      }
     }, 100);
   }
 }
