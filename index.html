@@ -73,7 +73,7 @@
     #rsvp h3 {
     margin: 8px 0 5px 0;
     padding: 0;
-    font-size: 1.0em; /* Optional: smaller text */
+    font-size: 1.2em; /* Optional: smaller text */
     }
     .container {
       position: relative;
@@ -149,10 +149,10 @@
       <img id="invitationImage" src="invitation.jpeg" alt="Wedding Invitation">
     </div>
   </div>
-  <button class="button" id="toggleButton" onclick="toggleEnvelope()">Άνοιγμα</button>
+  <button class="button" id="toggleButton" onclick="openEnvelope()">Άνοιγμα</button>
   <div id="rsvpContainer">
     <div id="rsvp">
-      <h3 style="font-family: 'Georgia', serif;">Θα παραβρεθείτε στην εκδήλωση;</h3>
+      <h3 style="font-family: 'Georgia', serif;">Θα παρευρεθείτε στο γάμο μας;</h3>
       <form id="rsvpForm">
         <label>
           <input type="radio" name="attendance" value="Yes" required> Ναι
@@ -188,22 +188,9 @@
     function openEnvelope() {
       if (!container.classList.contains('open')) {
         container.classList.add('open');
-        toggleButton.textContent = "Κλείσιμο";
+        toggleButton.style.display = "none";  // Hide the button after opening
         document.getElementById("mapButtons").classList.add("visible");
         document.getElementById("rsvpContainer").classList.add("visible");
-      }
-    }
-
-    function toggleEnvelope() {
-      if (container.classList.contains('open')) {
-        // Close only if already open
-        container.classList.remove('open');
-        toggleButton.textContent = "Άνοιγμα";
-        document.getElementById("mapButtons").classList.remove("visible");
-        document.getElementById("rsvpContainer").classList.remove("visible");
-      } else {
-        // Open if closed
-        openEnvelope();
       }
     }
 
