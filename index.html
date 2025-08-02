@@ -193,17 +193,19 @@ function openEnvelope() {
     document.getElementById("mapButtons").classList.add("visible");
     document.getElementById("rsvpContainer").classList.add("visible");
 
-    setTimeout(() => {
-      const rsvp = document.getElementById("rsvpContainer");
-      if (rsvp && typeof rsvp.scrollIntoView === 'function') {
-        rsvp.scrollIntoView({ behavior: "smooth", block: "start" });
+  setTimeout(() => {
+    const rsvp = document.getElementById("rsvpContainer");
 
-        // Fallback scroll in case scrollIntoView fails on some mobiles
-        setTimeout(() => {
-          window.scrollTo({ top: rsvp.offsetTop - 20, behavior: "smooth" });
-        }, 300);
-      }
-    }, 100);
+    if (rsvp && typeof rsvp.scrollIntoView === 'function') {
+      rsvp.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      // Fine-tune the scroll height slightly above the RSVP
+      setTimeout(() => {
+        const scrollOffset = rsvp.offsetTop - 80;  // adjust here
+        window.scrollTo({ top: scrollOffset, behavior: "smooth" });
+      }, 300);
+    }
+  }, 100);
   }
 }
 
