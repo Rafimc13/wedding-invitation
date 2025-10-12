@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Βάφτιση Κωνσταντίνου-Άγγελου</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #fffef9 0%, #fff8e7 45%, #fffdf5 100%);
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-y: auto;
+      font-family: 'Georgia', serif;
+    }
+
+    .container {
+      position: relative;
+      width: 420px;
+      height: 520px;
+      perspective: 1000px;
+      margin-bottom: 10px;
+    }
+
+    .envelope {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('baptism_konnos2.png') no-repeat center/contain;
+      transform-origin: top center;
+      transition: transform 1.5s ease;
+      z-index: 2;
+      cursor: pointer;
+      backface-visibility: hidden;
+    }
+
+    .invitation {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.5s ease, transform 1.5s ease;
+      z-index: 1;
+    }
+
+    .invitation img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .open .envelope {
+      transform: rotateX(90deg);
+      pointer-events: none;
+    }
+
+    .open .invitation {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .button {
+      background-color: #8b5e3c;
+      color: #fff;
+      border: none;
+      padding: 4px 20px;
+      margin: 5px 0;
+      font-size: 1.2em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .button:hover {
+      background-color: #a86d4b;
+      transform: scale(1.05);
+    }
+
+    .map-buttons {
+      display: none;
+      gap: 8px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .map-buttons.visible {
+      display: flex;
+    }
+
+    .map-button {
+      background-color: #8b5e3c;
+      color: #fff;
+      border: none;
+      padding: 4px 12px;
+      margin: 3px;
+      font-size: 1em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .map-button:hover {
+      background-color: #a86d4b;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="envelopeContainer">
+    <div class="envelope" onclick="openEnvelope()"></div>
+    <div class="invitation">
+      <img id="invitationImage" src="baptism_konnos.jpg" alt="Invitation">
+    </div>
+  </div>
+
+  <button class="button" id="toggleButton" onclick="openEnvelope()">Άνοιγμα</button>
+
+  <div class="map-buttons" id="mapButtons">
+    <a href="https://maps.app.goo.gl/iZSRs6PdFDgJezrJ6" target="_blank">
+      <button class="map-button">📍 Εκκλησία</button>
+    </a>
+    <a href="https://maps.app.goo.gl/snwaaS41vbBbPVds8" target="_blank">
+      <button class="map-button">📍 Κτήμα</button>
+    </a>
+  </div>
+
+  <script>
+    const container = document.getElementById('envelopeContainer');
+    const toggleButton = document.getElementById('toggleButton');
+
+    function openEnvelope() {
+      if (!container.classList.contains('open')) {
+        container.classList.add('open');
+        toggleButton.style.display = "none";
+        document.getElementById("mapButtons").classList.add("visible");
+      }
+    }
+  </script>
+</body>
+</html>
